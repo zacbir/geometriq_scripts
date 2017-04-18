@@ -10,7 +10,7 @@ background, stroke = random.choice(contrast)
 
 canvas = CoreGraphicsCanvas('output/trixelate', width, height)
 
-reference = ReferenceImage('/Users/zbir/Downloads/IMG_2417.JPG', canvas)
+reference = ReferenceImage('IMG_2657.JPG', canvas)
 
 canvas.set_fill_color(background)
 canvas.fill_background()

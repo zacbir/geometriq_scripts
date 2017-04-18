@@ -8,7 +8,7 @@ height = 5112
 background, stroke = random.choice(contrast)
 
 grey_band = 255.0 / 6.0
-greys = [Color.from_full_value(x * grey_band, x * grey_band, x * grey_band) for x in xrange(7)]
+greys = [Color.from_full_value(x * grey_band, x * grey_band, x * grey_band) for x in range(7)]
 
 canvas = CoreGraphicsCanvas('output/triangles', width, height)
 # reference = ReferenceImage('/Users/zbir/Downloads/apple-logo-black.png', canvas)
