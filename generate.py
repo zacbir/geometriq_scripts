@@ -26,7 +26,9 @@ if __name__ == '__main__':
     filename = os.path.join(outputDir, "{}".format(script_name))
 
     canvas = CoreGraphicsCanvas(filename, args.width, args.height)
-    
+    canvas.set_miter_limit(15)
+    canvas.set_line_cap(kCGLineCapRound)
+    canvas.set_line_join(kCGLineJoinMiter)
     canvas.set_stroke_color(base1)
     canvas.set_stroke_width(4)
     canvas.set_fill_color(base03)
@@ -39,6 +41,6 @@ if __name__ == '__main__':
     
     if args.should_punk:
         p = punk.Punk()
-        with open(args.geometer_script, 'rb') as geo:
+        with open(os.path.join('geometer_scripts', args.geometer_script), 'rb') as geo:
             geo_bytes = geo.read()
             p.encode(output, geo_bytes)
