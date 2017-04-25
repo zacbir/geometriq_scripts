@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
 import argparse
+from datetime import datetime
 import os
-import sys
-
-import punk
+import os.path
 
 from geometer import *
 
@@ -15,15 +14,16 @@ if __name__ == '__main__':
     parser.add_argument('-x', dest='width', type=int, help='width of the canvas')
     parser.add_argument('-y', dest='height', type=int, help='height of the canvas')
     parser.add_argument('-o', dest='output_dir', help='directory in which to save resulting image')
-    parser.add_argument('-p', dest='should_punk', action='store_true', help='whether to include the geometer_script in the image')
 
-    args = parser.parse_args()    
+    args = parser.parse_args()
 
     script_name = os.path.splitext(args.geometer_script)[0]
+    dated_name = "{}_{}".format(script_name, datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
+
     script = __import__('geometer_scripts.{}'.format(script_name), globals(), locals(), ['draw'], 0)
 
     outputDir = os.path.join(os.path.dirname(os.path.realpath(__file__)), args.output_dir)
-    filename = os.path.join(outputDir, "{}".format(script_name))
+    filename = os.path.join(outputDir, "{}".format(dated_name))
 
     canvas = CoreGraphicsCanvas(filename, args.width, args.height)
     canvas.set_miter_limit(15)
@@ -38,9 +38,3 @@ if __name__ == '__main__':
     script.draw(canvas)
 
     output = canvas.save()
-    
-    if args.should_punk:
-        p = punk.Punk()
-        with open(os.path.join('geometer_scripts', args.geometer_script), 'rb') as geo:
-            geo_bytes = geo.read()
-            p.encode(output, geo_bytes)
