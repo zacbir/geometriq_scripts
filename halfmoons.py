@@ -1,4 +1,3 @@
-from math import radians
 import random
 
 from geometer import *
@@ -10,7 +9,7 @@ def draw(canvas):
     canvas.set_fill_color(background)
     canvas.fill_background()
 
-    center = canvas.center()
+    center = canvas.center
 
     size = 128
 
@@ -21,7 +20,7 @@ def draw(canvas):
 
     for point in grid1.points.union(grid2.points):
         canvas.set_fill_color(stroke.alpha(random.random() * 1.0))
-        h.draw(canvas, at_point=point, rotation=radians(90))
+        h.draw(canvas, at_point=point, rotation=90)
         canvas.set_fill_color(stroke.alpha(random.random() * 1.0))
-        h.draw(canvas, at_point=point, rotation=radians(-90))
+        h.draw(canvas, at_point=point, rotation=-90)
 
