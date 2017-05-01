@@ -12,12 +12,15 @@ def draw(canvas):
     p2 = Point(canvas.width - x_offset, canvas.center.y)
 
     x = random.random() * canvas.width / 2.0 + canvas.width / 4.0
-
-    sheets = 16
+    
+    sheets = 50
+    move_direction = 1 if x < canvas.width / 2 else -1
+    move = (canvas.width - x) / sheets * move_direction
 
     for i in range(sheets):
         canvas.set_stroke_color(base1.hair())  # alpha(random.random() * 0.5 + 0.25))
         y = (canvas.height / sheets) * i + y_offset
+        x += move
         p3 = Point(x, y)
 
         line1 = Line(center=p3, to_point=p1)
@@ -28,13 +31,11 @@ def draw(canvas):
         line2.extended().draw(canvas)
         right_lines = [line2]
 
-        left_distances = sorted(random.sample(range(int(floor(line1.length))), 5))
-        left_points = [line1.point_from_center(d) for d in left_distances]
-        right_lines.extend([Line(center=l_p, to_point=p2) for l_p in left_points])
-
-        right_distances = sorted(random.sample(range(int(floor(line2.length))), 5))
-        right_points = [line2.point_from_center(d) for d in right_distances]
-        left_lines.extend([Line(center=r_p, to_point=p1) for r_p in right_points])
+        short_side = min(line1.length, line2.length)
+        chunk = short_side / (sheets * 1.1)
+        square_side = chunk * i + chunk
+        right_lines.append(Line(center=line1.point_from_center(square_side), to_point=p2))
+        left_lines.append(Line(center=line2.point_from_center(square_side), to_point=p1))
 
         left_pairs = [left_lines[l:l + 2] for l in range(0, len(left_lines), 2)]
         right_pairs = [right_lines[r:r + 2] for r in range(0, len(right_lines), 2)]
@@ -59,6 +60,6 @@ def draw(canvas):
                 l2.extended().draw(canvas)
 
                 fill = band(fills, i, sheets)
-                canvas.set_fill_color(fill.half())  # alpha(1.0 / sheets))
+                canvas.set_fill_color(fill.half())
 
                 s.draw(canvas)

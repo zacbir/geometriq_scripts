@@ -13,8 +13,8 @@ def draw(canvas):
 
     x = random.random() * canvas.width / 2.0 + canvas.width / 4.0
 
-    sheets = 14
-
+    sheets = 24
+    
     for i in range(sheets):
         canvas.set_stroke_color(base1.hair())  # alpha(random.random() * 0.5 + 0.25))
         x += 100
@@ -60,6 +60,6 @@ def draw(canvas):
                 l2.extended().draw(canvas)
 
                 fill = band(fills, i, sheets)
-                canvas.set_fill_color(fill.alpha(1.0 / sheets))
+                canvas.set_fill_color(fill.alpha(1.0 / 8))
 
                 s.draw(canvas)
