@@ -9,13 +9,29 @@ def F():
         yield b
     
 def draw(canvas):
-    num_circles = 32
+    num_circles = 19
     fib = F()
+    
+    definitions = set()
     
     for i in range(num_circles):
         
         radius = fib.next()
-        c = Circle(radius, center=Point(origin.x + radius, origin.y))
-        fill = band(fills, i, num_circles)
+        
+        segments = 6
+        
+        for s in range(segments):
+            circle = (
+                radius,
+                Point(origin.x + radius,  origin.y),
+                band(fills, i, num_circles),
+                s * (360 / segments)
+            )
+            
+            definitions.add(circle)
+
+    for circle_def in definitions:
+        radius, center, fill, rotation = circle_def
+        c = Circle(radius, center=center)
         canvas.set_fill_color(fill.hair())
-        c.draw(canvas, at_point=canvas.center, rotation=i * (360 / num_circles))
+        c.draw(canvas, at_point=canvas.center, rotation=rotation)
