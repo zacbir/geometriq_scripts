@@ -29,12 +29,18 @@ if __name__ == '__main__':
     canvas.set_miter_limit(15)
     canvas.set_line_cap(kCGLineCapRound)
     canvas.set_line_join(kCGLineJoinMiter)
-    canvas.set_stroke_color(base1)
+    canvas.set_stroke_color(clear)
     canvas.set_stroke_width(4)
     canvas.set_fill_color(base03)
     
     canvas.fill_background()
     
-    script.draw(canvas)
-
-    output = canvas.save()
+    canvas.set_stroke_color(base1)
+    canvas.set_fill_color(clear)
+    
+    try:
+        script.draw(canvas)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        output = canvas.save()
