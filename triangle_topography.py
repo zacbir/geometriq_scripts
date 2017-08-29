@@ -12,10 +12,6 @@ def shape_from(edge):
     """
     :param edge: Edge
     :return: ArbitraryTriangle
-
-    public bool isLeft(Point a, Point b, Point c) {
-        return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) > 0;
-    }
     """
     line = edge.line
     A = line.center
