@@ -18,7 +18,7 @@ def draw(canvas):
     while size > 10:
         canvas.set_stroke_color(band(fills, size, band_max))
         t = Triangle(size)
-        t.draw(canvas, at_point=canvas.center(), rotation=radians(a * 2))
+        t.draw(canvas, at_point=canvas.center, rotation=a * 2)
         a += 1
         size *= 0.90
 

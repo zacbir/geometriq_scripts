@@ -11,9 +11,9 @@ canvas = CoreGraphicsCanvas('output/cubes', width, height)
 canvas.set_fill_color(background)
 canvas.fill_background()
 
-grid1 = VerticalHexagonGrid(canvas.center(), 120, 30, 30)
+grid1 = VerticalHexagonGrid(canvas.center, 120, 30, 30)
 grid1_vertices = VerticalHexagonGrid(grid1.start, 120, 32, 32)
-grid2 = VerticalHexagonGrid(Point(canvas.center().x, canvas.center().y + grid1.size), 120, 30, 32)
+grid2 = VerticalHexagonGrid(Point(canvas.center.x, canvas.center.y + grid1.size), 120, 30, 32)
 grid2_vertices = VerticalHexagonGrid(grid2.start, 120, 32, 34)
 
 for point in grid1.points:
