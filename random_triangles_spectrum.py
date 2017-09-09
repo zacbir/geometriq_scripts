@@ -1,5 +1,33 @@
+import math
 import random
 from geometer import *
+
+
+def angle_from(point, to=origin):
+    if point.x == to.x:
+        if point.y >= to.y:
+            return 90
+        else:
+            return 270
+    if point.y == to.y:
+        if point.x >= to.x:
+            return 360
+        else:
+            return 180
+    base_degrees = math.degrees(math.asin((point.x - to.x) / float(point.distance_to(to))))
+    
+    if point.x > to.x:
+        if point.y > to.y:
+            base_degrees += 0
+        else:
+            base_degrees += 270
+    else:
+        if point.y > to.y:
+            base_degrees += 90
+        else:
+            base_degrees += 180
+    
+    return base_degrees
 
 
 def nearest_points(points, point1, point2=None, count=1):
@@ -37,6 +65,12 @@ def position(point, line):
     return cmp(point, intersection_point)
 
 
+def color_for_point(point, canvas):
+    line = Line.from_origin_with_slope(Point(canvas.width, 0), 2.0/5.0)
+    distance = line.distance_to(point)
+    return band(fills, distance, canvas.diagonal, fuzz=True)
+
+
 def draw(canvas):
     """
     Make some pretty and draw it to `canvas`.
@@ -44,8 +78,6 @@ def draw(canvas):
     :param canvas: CoreGraphicsCanvas
     :return: None
     """
-    colors = [base02, base1, base3, red, base02, base1, base3, red, base02, base1, base3]
-
     canvas.set_stroke_width(0.5)
 
     chunk = 60
@@ -77,7 +109,8 @@ def draw(canvas):
     center_triangle_points = nearest_points(points, canvas.center, count=3)
 
     a = ArbitraryTriangle(center_triangle_points)
-    canvas.set_fill_color(random.choice(colors).half())
+    fill = color_for_point(a.center, canvas)
+    canvas.set_fill_color(fill.midtone())
 
     a.draw(canvas)
 
@@ -111,7 +144,11 @@ def draw(canvas):
             #     edge_lines_seen.get(at.edges[1].line, 0) >= 2 and
             #     edge_lines_seen.get(at.edges[2].line, 0) >= 2):
             #     continue
-            canvas.set_fill_color(random.choice(colors).half())
+            d = angle_from(at.center, to=canvas.center)
+            fill_idx = d
+            fill = color_for_point(at.center, canvas)
+            # fill = band(fills, at.center.x, canvas.width, fuzz=True)     
+            canvas.set_fill_color(fill.midtone())
 
             at.draw(canvas)
 
