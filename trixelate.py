@@ -3,14 +3,14 @@ import random
 
 from geometer import *
 
-width = 5 * 600
-height = 7 * 600
+width = 2320
+height = 3088
 
 background, stroke = random.choice(contrast)
 
-canvas = CoreGraphicsCanvas('output/trixelate', width, height)
+canvas = CoreGraphicsCanvas('output/trixelate-face', width, height)
 
-reference = ReferenceImage('/Users/zbir/Desktop/lex_mothers_day.jpg', canvas)
+reference = ReferenceImage('/Users/zac.bir/Downloads/IMG_4809.JPG', canvas)
 
 canvas.set_fill_color(background)
 canvas.fill_background()
