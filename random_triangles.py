@@ -1,3 +1,4 @@
+import math
 import random
 from geometer import *
 
@@ -44,11 +45,11 @@ def draw(canvas):
     :param canvas: CoreGraphicsCanvas
     :return: None
     """
-    colors = [base02, base1, base3, red, base02, base1, base3, red, base02, base1, base3]
-
     canvas.set_stroke_width(0.5)
 
-    chunk = 60
+    colors = [base1, base00, cyan, cyan, green, green]
+
+    chunk = 128
 
     points = set()
     edges = set()
@@ -77,15 +78,12 @@ def draw(canvas):
     center_triangle_points = nearest_points(points, canvas.center, count=3)
 
     a = ArbitraryTriangle(center_triangle_points)
-    canvas.set_fill_color(random.choice(colors).half())
+    canvas.set_fill_color(random.choice(colors).midtone())
 
     a.draw(canvas)
 
     edges.update(set(a.edges))
     edge_lines_seen.update({x.line: 1 for x in a.edges})
-
-    # for p in points:
-    #     Circle(5, p).draw(canvas)
 
     while edges:
         edge = edges.pop()
@@ -102,16 +100,23 @@ def draw(canvas):
         other_points = points - set(invalid_points)
         e_p1 = edge.line.center
         e_p2 = edge.line.to_point
+
+        def intersects_with_any(test_lines, lines):
+            for line in lines:
+                for t_line in test_lines:
+                    if t_line.intersects(line):
+                        return True
+
+            return False
+
         try:
             n_p3 = nearest_points(other_points, e_p1, e_p2)[0]
-            at = ArbitraryTriangle([e_p1, e_p2, n_p3])
+            # while intersects_with_any({Line(e_p1, n_p3), Line(e_p2, n_p3)}, edge_lines_seen.keys()):
+            #     other_points = other_points - {n_p3}
+            #     n_p3 = nearest_points(other_points, e_p1, e_p2)[0]
 
-            # Only draw the new ArbitraryTriangle if all edges haven't been seen twice
-            # if (edge_lines_seen.get(at.edges[0].line, 0) >= 2 and
-            #     edge_lines_seen.get(at.edges[1].line, 0) >= 2 and
-            #     edge_lines_seen.get(at.edges[2].line, 0) >= 2):
-            #     continue
-            canvas.set_fill_color(random.choice(colors).half())
+            at = ArbitraryTriangle([e_p1, e_p2, n_p3])
+            canvas.set_fill_color(random.choice(colors).midtone())
 
             at.draw(canvas)
 

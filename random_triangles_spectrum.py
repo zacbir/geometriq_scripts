@@ -3,33 +3,6 @@ import random
 from geometer import *
 
 
-def angle_from(point, to=origin):
-    if point.x == to.x:
-        if point.y >= to.y:
-            return 90
-        else:
-            return 270
-    if point.y == to.y:
-        if point.x >= to.x:
-            return 360
-        else:
-            return 180
-    base_degrees = math.degrees(math.asin((point.x - to.x) / float(point.distance_to(to))))
-    
-    if point.x > to.x:
-        if point.y > to.y:
-            base_degrees += 0
-        else:
-            base_degrees += 270
-    else:
-        if point.y > to.y:
-            base_degrees += 90
-        else:
-            base_degrees += 180
-    
-    return base_degrees
-
-
 def nearest_points(points, point1, point2=None, count=1):
     """
     Find the nearest point(s) to either a single point `point1`, or to the midpoint of a line between `point1` and `point2`.
@@ -68,7 +41,7 @@ def position(point, line):
 def color_for_point(point, canvas):
     line = Line.from_origin_with_slope(Point(canvas.width, 0), 2.0/5.0)
     distance = line.distance_to(point)
-    return band(fills, distance, canvas.diagonal, fuzz=True)
+    return band(greys, distance, canvas.diagonal, fuzz=True)
 
 
 def draw(canvas):
@@ -85,6 +58,7 @@ def draw(canvas):
     points = set()
     edges = set()
     edge_lines_seen = {}
+    all_lines_seen = set()
 
     iterations_x = canvas.width / chunk
     iterations_y = canvas.height / chunk
@@ -125,6 +99,7 @@ def draw(canvas):
 
     edges.update(set(a.edges))
     edge_lines_seen.update({x.line: 1 for x in a.edges})
+    all_lines_seen.update({x.line for x in a.edges})
 
     while edges:
         edge = edges.pop()
@@ -160,7 +135,7 @@ def draw(canvas):
 
         try:
             n_p3 = nearest_points(other_points, e_p1, e_p2)[0]
-            while intersects_with_any({Line(e_p1, n_p3), Line(e_p2, n_p3)}, edge_lines_seen.keys()):
+            while intersects_with_any({Line(e_p1, n_p3), Line(e_p2, n_p3)}, all_lines_seen):
                 other_points = other_points - {n_p3}
                 n_p3 = nearest_points(other_points, e_p1, e_p2)[0]
 
@@ -179,6 +154,7 @@ def draw(canvas):
             edge_lines_seen[new_edge_1.line] = edge_lines_seen.setdefault(new_edge_1.line, 0) + 1
             edge_lines_seen[new_edge_2.line] = edge_lines_seen.setdefault(new_edge_2.line, 0) + 1
             edges.update({new_edge_1, new_edge_2})
+            all_lines_seen.update({new_edge_1.line, new_edge_2.line})
 
         except IndexError:
             continue
