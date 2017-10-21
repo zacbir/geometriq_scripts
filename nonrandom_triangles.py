@@ -2,6 +2,8 @@ import math
 import random
 from geometer import *
 
+from . import sample_grid
+
 
 def nearest_points(points, point1, point2=None, count=1):
     """
@@ -47,7 +49,7 @@ def color_for_point(point, canvas):
     """
     line = Line.from_origin_with_slope(Point(canvas.width, 0), 2.0/5.0)
     distance = line.distance_to(point)
-    return band(greys, distance, canvas.diagonal, fuzz=True)
+    return band(fills, distance, canvas.diagonal, fuzz=True)
 
 
 def draw(canvas):
@@ -71,29 +73,36 @@ def draw(canvas):
 
     points_per_chunk = 1
 
-    for x_idx in range(iterations_x):
+    sample_points = {
+        'a': Point(x=100, y=100),
+        'b': Point(x=400, y=700),
+        'c': Point(x=300, y=1300),
+        'd': Point(x=900, y=300),
+        'e': Point(x=700, y=900),
+        'f': Point(x=800, y=1100),
+        'g': Point(x=1300, y=200),
+        'h': Point(x=1300, y=600),
+        'i': Point(x=1300, y=1400)
+    }
 
-        for y_idx in range(iterations_y):
+    points = set(sample_points.values())
+    # points = {
+    #     sample_points['l'],
+    #     sample_points['m'],
+    #     sample_points['n'],
+    #     sample_points['q'],
+    #     sample_points['r'],
+    #     sample_points['s'],
+    # }
 
-            chunk_min_x, chunk_max_x = x_idx * chunk, x_idx * chunk + chunk
-            chunk_min_y, chunk_max_y = y_idx * chunk, y_idx * chunk + chunk
+    prev_debug_value = canvas.debug
+    canvas.debug = False
 
-            xs = range(chunk_min_x, chunk_max_x)
-            ys = range(chunk_min_y, chunk_max_y)
+    for p in sample_points.values():
+        canvas.set_fill_color(red)
+        Circle(5, p).draw(canvas)
 
-            chunk_points = [Point(x, y) for x, y in zip(random.sample(xs, points_per_chunk), random.sample(ys, points_per_chunk))]
-
-            for p in chunk_points:
-                points.add(p)
-
-    # prev_debug_value = canvas.debug
-    # canvas.debug = False
-    #
-    # for p in points:
-    #     canvas.set_fill_color(red)
-    #     Circle(5, p).draw(canvas)
-    #
-    # canvas.debug = prev_debug_value
+    canvas.debug = prev_debug_value
 
     center_triangle_points = nearest_points(points, canvas.center, count=3)
 
@@ -115,13 +124,13 @@ def draw(canvas):
 
         edge_lines_seen[edge.line] += 1
 
-        # prev_debug_value = canvas.debug
-        # canvas.debug = False
-        #
-        # canvas.set_fill_color(yellow)
-        # Circle(5, edge.line.midpoint).draw(canvas)
-        #
-        # canvas.debug = prev_debug_value
+        prev_debug_value = canvas.debug
+        canvas.debug = False
+
+        canvas.set_fill_color(yellow)
+        Circle(5, edge.line.midpoint).draw(canvas)
+
+        canvas.debug = prev_debug_value
 
         opposite_position = position(edge.opposite_point, edge.line)
         other_points = points - {p for p in points if position(p, edge.line) == opposite_position}
