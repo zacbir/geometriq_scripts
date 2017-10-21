@@ -12,7 +12,7 @@ def random_point_within(min_x, max_x, min_y, max_y):
 
 def draw(canvas):
 
-    blocks = 3
+    blocks = 2
 
     bounds_w = canvas.width / (blocks * 2.0 + 1)
     bounds_h = canvas.height / (blocks * 2.0 + 1)
@@ -28,7 +28,7 @@ def draw(canvas):
             points = []
             control_points = []
 
-            for x in range(3): #random.choice([3, 4, 5])):
+            for x in range(4): #random.choice([3, 4, 5])):
                 points.append(random_point_within(min_x, max_x, min_y, max_y))
                 control_points.append(random_point_within(min_x, max_x, min_y, max_y))
 
