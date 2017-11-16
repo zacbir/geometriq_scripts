@@ -91,17 +91,16 @@ def draw(canvas):
 
             fill_chance = random.random()
 
-            for p1, p2 in s.paths():
-                at = ArbitraryTriangle([p1, p2, square_center])
+            if fill_chance < 0.5:
+                pair = random.choice(fill_two)
+                triangles = sides[pair[0]], sides[pair[1]]
                 with ContextStroker(canvas, 0, clear) as fill_only_canvas:
-                    chance = random.random()
-                    if triangles_filled == 2:
-                        break
-                    if chance < 0.1:
-                        with ContextFiller(fill_only_canvas, base00) as filled_canvas:
-                            at.draw(filled_canvas)
-                            triangles_filled += 1
-                    elif 0.1 < chance < 0.25:
-                        with ContextFiller(fill_only_canvas, base1) as filled_canvas:
-                            at.draw(filled_canvas)
-                            triangles_filled += 1
+                    with ContextFiller(fill_only_canvas, base1) as filled_canvas:
+                        triangles[0].draw(filled_canvas)
+                    with ContextFiller(fill_only_canvas, base00) as filled_canvas:
+                        triangles[1].draw(filled_canvas)
+            elif 0.5 < fill_chance < 0.65:
+                triangle = sides[random.choice(fill_one)]
+                with ContextStroker(canvas, 0, clear) as fill_only_canvas:
+                    with ContextFiller(fill_only_canvas, base1) as filled_canvas:
+                        triangle.draw(filled_canvas)
