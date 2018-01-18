@@ -1,3 +1,4 @@
+from math import cos, pi, sin, sqrt
 import random
 
 from geometer import *
@@ -44,6 +45,12 @@ def random_point_within(min_x, max_x, min_y, max_y):
     return Point(rand_x, rand_y)
 
 
+def random_point_within_circle(center, radius):
+    t = 2 * pi * random.random()
+    r = sqrt(random.random() * radius *radius)
+    return Point(r * cos(t) + center.x, r * sin(t) + center.y)
+
+
 def color_for_point(point, canvas):
     """
 
@@ -58,8 +65,49 @@ def color_for_point(point, canvas):
 
 def draw(canvas):
 
-    blocks = 9
-    inner_margin = 50
+    hex_size = 128
+
+    hex_grid = VerticalHexagonGrid(canvas.center, 256, 10, 10)
+
+    for p in hex_grid.points:
+        if p.distance_to(canvas.center) < 1050:
+            hex = HorizontalHexagon(hex_size, p)
+            hex.draw(canvas)
+
+            hex_center = random_point_within_circle(p, hex.step * 0.8)
+
+            northeast, east, southeast, southwest, west, northwest = hex.points
+
+            for point in hex.points:
+                l = Line(hex_center, point)
+                l.draw(canvas)
+
+            north_t = ArbitraryTriangle([northwest, northeast, hex_center])
+            northeast_t = ArbitraryTriangle([northeast, east, hex_center])
+            southeast_t = ArbitraryTriangle([east, southeast, hex_center])
+            south_t = ArbitraryTriangle([southeast, southwest, hex_center])
+            southwest_t = ArbitraryTriangle([southwest, west, hex_center])
+            northwest_t = ArbitraryTriangle([west, northwest, hex_center])
+
+            color = base00  # color_for_point(Point(min_x, min_y), canvas)
+
+            with ContextStroker(canvas, 0, clear) as fill_only_canvas:
+                with ContextFiller(fill_only_canvas, color) as north_canvas:
+                    north_t.draw(north_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.66)) as northeast_canvas:
+                    northeast_t.draw(northeast_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.33)) as southeast_canvas:
+                    southeast_t.draw(southeast_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0)) as south_canvas:
+                    south_t.draw(south_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.33)) as southwest_canvas:
+                    southwest_t.draw(southwest_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.66)) as northwest_canvas:
+                    northwest_t.draw(northwest_canvas)
+
+    """
+    blocks = 5
+    inner_margin = 75
 
     bounds_w = canvas.width / (blocks + 2)
     bounds_h = canvas.height / (blocks + 2)
@@ -101,15 +149,15 @@ def draw(canvas):
             color = base00  # color_for_point(Point(min_x, min_y), canvas)
 
             with ContextStroker(canvas, 0, clear) as fill_only_canvas:
-                with ContextFiller(fill_only_canvas, color) as north_canvas:
-                    north.draw(north_canvas)
-                with ContextFiller(fill_only_canvas, color.alpha(0.5)) as east_canvas:
-                    east.draw(east_canvas)
-                with ContextFiller(fill_only_canvas, color.alpha(0)) as south_canvas:
-                    south.draw(south_canvas)
                 with ContextFiller(fill_only_canvas, color.alpha(0.5)) as west_canvas:
                     west.draw(west_canvas)
-                #
+                with ContextFiller(fill_only_canvas, color) as north_canvas:
+                    north.draw(north_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.75)) as east_canvas:
+                    east.draw(east_canvas)
+                with ContextFiller(fill_only_canvas, color.alpha(0.25)) as south_canvas:
+                    south.draw(south_canvas)
+            #
             # fill_one = range(4)                          # Either fill one triangle
             # fill_two = zip(range(4), range(1, 4) + [0])  # Or two, adjacent triangles
             #
@@ -130,3 +178,5 @@ def draw(canvas):
             #     with ContextStroker(canvas, 0, clear) as fill_only_canvas:
             #         with ContextFiller(fill_only_canvas, base1) as filled_canvas:
             #             triangle.draw(filled_canvas)
+
+"""
