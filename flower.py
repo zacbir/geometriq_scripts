@@ -13,10 +13,10 @@ def random_point_on_circle(center, radius):
 
 def draw(canvas):
     p1 = origin
-    p2 = Point(canvas.width / 2.0, 0)
+    p2 = Point(canvas.width * 0.48, 0)
 
     cp_1 = random_point_on_circle(p1, 1000)
-    cp_2 = random_point_on_circle(p2, 1000)
+    cp_2 = random_point_on_circle(p2, 500)
     cp_3 = Point(cp_1.x, -1 * cp_1.y)
     cp_4 = Point(cp_2.x, -1 * cp_2.y)
 
