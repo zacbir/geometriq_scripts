@@ -29,14 +29,14 @@ def thickness_for_point(point, canvas):
 def draw(canvas):
     canvas.set_stroke_width(4)
     canvas.set_stroke_color(base03)
-    size = 384
+    size = 128
     t = Triangle(size)
-    g_east = VerticalHexagonGrid(canvas.center, size, 13, 6)
-    g_west = VerticalHexagonGrid(Point(canvas.center.x + t.r, canvas.center.y + t.size / 2), size, 14, 7)
+    g_east = VerticalHexagonGrid(canvas.center, size, 26, 12)
+    g_west = VerticalHexagonGrid(Point(canvas.center.x + t.r, canvas.center.y + t.size / 2), size, 28, 14)
 
-    g_snap = VerticalHexagonGrid(Point(canvas.center.x + t.r * 2, canvas.center.y), size, 14, 7)
+    g_snap = VerticalHexagonGrid(Point(canvas.center.x + t.r * 2, canvas.center.y), size, 28, 14)
 
-    g_snap_large = HorizontalHexagonGrid(g_snap.start, t.step * 2, 14, 8)
+    g_snap_large = HorizontalHexagonGrid(g_snap.start, t.step * 2, 28, 16)
 
     for p in g_east.points:
         t = EastTriangle(size, p, g_snap)
