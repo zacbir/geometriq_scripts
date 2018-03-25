@@ -40,7 +40,7 @@ def draw(canvas):
 
     for p in g_east.points:
         if random.random() < 0.05:
-            continue      
+            continue
         t = EastTriangle(size, p, g_snap)
         canvas.set_fill_color(color_for_point(p, canvas))
         t.draw(canvas)
