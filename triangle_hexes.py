@@ -17,7 +17,7 @@ def color_for_point(point, canvas):
 
 def draw(canvas):
     canvas.set_stroke_width(2)
-    size = 256
+    size = 512
     t = Triangle(size)
     g_east = VerticalHexagonGrid(canvas.center, size, 10, 10)
     g_west = VerticalHexagonGrid(Point(canvas.center.x + t.r, canvas.center.y + t.size / 2), size, 11, 12)
@@ -25,8 +25,6 @@ def draw(canvas):
     g_snap = VerticalHexagonGrid(Point(canvas.center.x + t.r * 2, canvas.center.y), size, 12, 12)
 
     g_snap_large = VerticalHexagonGrid(g_snap.start, size * 2, 6, 6)
-
-    # Circle(5, canvas.center).draw(canvas)
 
     for p in g_east.points:
         t = EastTriangle(size, p, g_snap)
@@ -39,9 +37,8 @@ def draw(canvas):
         t.draw(canvas)
 
     for p in g_snap_large.points:
-        # canvas.set_stroke_color(white)
-        # Circle(5, p).draw(canvas)
-        for r in range(int(floor(size * 1.5)))[::24]:
+        step = 16
+        for r in range(size)[::step]:
             h = VerticalHexagon(r, p)
             canvas.set_fill_color(clear)
             h.draw(canvas)
