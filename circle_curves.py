@@ -12,13 +12,11 @@ def draw(canvas):
     right_hand_points = set()
     right_hand_control_points = set()
 
-    for y in range(0, canvas.height, 32):
+    for y in range(0, canvas.height, 16):
         l = line_at(y)
         intersections = c.intersections_with_line(l)
 
         color = band(fills, y, canvas.height).midtone()
-
-        canvas.set_stroke_color(color)
 
         if intersections is not None and intersections[0] != intersections[1]:
             left, right = intersections
