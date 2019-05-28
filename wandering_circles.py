@@ -7,12 +7,10 @@ def draw(canvas):
     # canvas.set_stroke_color(base1.hair())
     start = canvas.center
     
-    diag = sqrt((canvas.width / 2)**2 + (canvas.height / 2)**2)
-    
-    size = diag
+    size = canvas.diagonal
     
     while size > 1:
-        fill = band(list(reversed(fills)), size, diag)
+        fill = band(list(reversed(fills)), size, canvas.diagonal)
         # opacity = size / diag
         canvas.set_stroke_width(random.random() * 10)
         canvas.set_stroke_color(base1.shade())

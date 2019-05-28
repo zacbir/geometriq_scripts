@@ -1,9 +1,10 @@
+from functools import cmp_to_key
 import math
 import random
 from geometer import *
 
 
-def nearest_points(points, point1, point2=None, count=1):
+def nearest_points(points: set, point1: Point, point2: Point=None, count: int=1):
     """
     Find the nearest point(s) to either a single point `point1`, or to the midpoint of a line between `point1` and `point2`.
 
@@ -17,10 +18,21 @@ def nearest_points(points, point1, point2=None, count=1):
 
     if point2:
         other_points.discard(point2)
-        l = Line(point1, point2)
-        nearest = sorted(list(other_points), lambda a, b: cmp(a.distance_to(l.midpoint), b.distance_to(l.midpoint)))
+        midpoint = Line(point1, point2).midpoint
+
+        def two_point_cmp(a: Point, b: Point):
+            return a.distance_to(midpoint) - b.distance_to(midpoint)
+
+        cmp_func = two_point_cmp
     else:
-        nearest = sorted(list(other_points), lambda a, b: cmp(a.distance_to(point1), b.distance_to(point1)))
+        def one_point_cmp(a: Point, b: Point):
+            return a.distance_to(point1) - b.distance_to(point1)
+
+        cmp_func = one_point_cmp
+
+    sortable_points = list(other_points)
+
+    nearest = sorted(sortable_points, key=cmp_to_key(cmp_func))
 
     return nearest[:count]
 
@@ -35,7 +47,7 @@ def position(point, line):
     """
     intersection_point = Line.from_origin_with_slope(point, line.inverse_slope).intersection_with(line)
 
-    return cmp(point, intersection_point)
+    return -1 if point < intersection_point else 1 if point > intersection_point else 0
 
 
 def color_for_point(point, canvas):
@@ -47,7 +59,7 @@ def color_for_point(point, canvas):
     """
     line = Line.from_origin_with_slope(Point(canvas.width, 0), 2.0/5.0)
     distance = line.distance_to(point)
-    return band(greys, distance, canvas.diagonal, fuzz=True)
+    return band(fills, distance, canvas.diagonal, fuzz=True)
 
 
 def draw(canvas):
@@ -59,15 +71,15 @@ def draw(canvas):
     """
     canvas.set_stroke_width(0.5)
 
-    chunk = 32
+    chunk = 64
 
     points = set()
     edges = set()
     edge_lines_seen = {}
     all_lines_seen = set()
 
-    iterations_x = canvas.width / chunk
-    iterations_y = canvas.height / chunk
+    iterations_x = int(math.floor(canvas.width / chunk))
+    iterations_y = int(math.floor(canvas.height / chunk))
 
     points_per_chunk = 1
 
@@ -86,13 +98,13 @@ def draw(canvas):
             for p in chunk_points:
                 points.add(p)
 
-    # prev_debug_value = canvas.debug
-    # canvas.debug = False
-    #
+    prev_debug_value = canvas.debug
+    canvas.debug = False
+
     # for p in points:
     #     canvas.set_fill_color(red)
     #     Circle(5, p).draw(canvas)
-    #
+
     # canvas.debug = prev_debug_value
 
     center_triangle_points = nearest_points(points, canvas.center, count=3)
@@ -123,8 +135,8 @@ def draw(canvas):
         #
         # canvas.debug = prev_debug_value
 
-        opposite_position = position(edge.opposite_point, edge.line)
-        other_points = points - {p for p in points if position(p, edge.line) == opposite_position}
+        opposite_position = edge.line.compare(edge.opposite_point)  # position(edge.opposite_point, edge.line)
+        other_points = points - {p for p in points if edge.line.compare(p) == opposite_position}  # position(p, edge.line) == opposite_position}
 
         e_p1 = edge.line.center
         e_p2 = edge.line.to_point
@@ -133,6 +145,8 @@ def draw(canvas):
             for line in lines:
                 for t_line in test_lines:
                     if t_line.intersects(line):
+                        if t_line.intersection_with(line).is_basically(line.center) or t_line.intersection_with(line).is_basically(line.to_point):
+                            return False
                         return True
 
             return False
@@ -149,7 +163,7 @@ def draw(canvas):
             # d = angle_from(at.center, to=canvas.center)
             # fill_idx = d
             fill = color_for_point(at.center, canvas)
-            # fill = band(fills, at.center.x, canvas.width, fuzz=True)     
+            # fill = band(fills, at.center.x, canvas.width, fuzz=True)
             canvas.set_fill_color(fill.midtone())
 
             at.draw(canvas)
