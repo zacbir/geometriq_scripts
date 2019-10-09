@@ -1,3 +1,4 @@
+from math import floor
 import random
 from geometer import *
 
@@ -5,14 +6,14 @@ def line_at(y):
     return Line.from_origin_with_slope(Point(0, y), 0)
 
 def draw(canvas):
-    c = Circle(1536, center=canvas.center)
+    c = Circle(min(canvas.width, canvas.height) * 0.4, center=canvas.center)
 
     left_hand_points = set()
     left_hand_control_points = set()
     right_hand_points = set()
     right_hand_control_points = set()
 
-    for y in range(0, canvas.height, 16):
+    for y in range(0, canvas.height, floor(canvas.height / 256)):
         l = line_at(y)
         intersections = c.intersections_with_line(l)
 
