@@ -44,7 +44,7 @@ if __name__ == '__main__':
     outputDir = os.path.join(os.path.dirname(os.path.realpath(__file__)), args.output_dir)
     filename = os.path.join(outputDir, "{}".format(dated_name))
 
-    canvas = CoreGraphicsCanvas(filename, width, height, debug=DEBUG)
+    canvas = CoreGraphicsCanvas(filename, int(width), int(height), debug=DEBUG)
     canvas.set_miter_limit(15)
     canvas.set_line_cap(kCGLineCapRound)
     canvas.set_line_join(kCGLineJoinMiter)
