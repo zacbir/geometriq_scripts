@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from math import floor
 from random import *
 from geometer import *
 
@@ -21,15 +22,22 @@ def neg_slope(point, size):
                point.y + size / 2.0),
          270))
         
-size = 256
+size = 64
 
 a = QuarterCircle(size / 2.0)
 s = Square(size)
 c = Circle(8)
 
 def draw(canvas):
-    g = SquareGrid(canvas.center, size, 25, 25)
+    g = SquareGrid(canvas.center, size, floor(canvas.width / size), floor(canvas.height / size))
+    color_center = canvas.random_point()
+    longest = canvas.longest_distance_from(color_center)
+    canvas.set_stroke_width(16)
+
     for p in g.points:
+        d = p.distance_to(color_center)
+
+        canvas.set_stroke_color(band(fills, d, longest, fuzz=True))
         # canvas.set_stroke_color(green)
         # c.draw(canvas, at_point=p)
         # canvas.set_stroke_color(red)

@@ -6,23 +6,20 @@ from geometer import *
 
 def draw(canvas):
     
-    size = 64
+    size = 256
 
-    north = lambda point: Point(point.x, point.y + size)
-    east = lambda point: Point(point.x + size, point.y)
-    south = lambda point: Point(point.x, point.y - size)
+    north = lambda point: Point(point.x, point.y + size),
+    east = lambda point: Point(point.x + size, point.y),
+    south = lambda point: Point(point.x, point.y - size),
     west = lambda point: Point(point.x - size, point.y)
     
     used = {}
     
-    g = SquareGrid(canvas.center, size, 25, 25)
-    
-    ref_line = Line.from_origin_with_slope(Point(canvas.width, 0), 2/3)
+    g = SquareGrid(canvas.center, 256, 5, 5)
     
     for p in g.points:
         
-        stroke = band(fills, ref_line.distance_to(p), canvas.diagonal, fuzz=True)
-        canvas.set_stroke_color(stroke)
+        # check to see if we've seen two already
         
         num_used = used.setdefault(p, 0)
         if num_used == 2:
