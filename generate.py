@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 import os
 import os.path
+import webbrowser
 
 try:
     import console
@@ -11,6 +12,15 @@ except ImportError:
     console = None
 
 from geometer import *
+
+
+def show_image(image):
+
+    if console:
+        console.show_image(image)
+    else:
+        webbrowser.open(image)
+
 
 if __name__ == '__main__':
 
@@ -64,5 +74,5 @@ if __name__ == '__main__':
     finally:
         output = canvas.save()
     
-    if output and console:
-        console.show_image(output)
+    if output:
+        show_image(output)
