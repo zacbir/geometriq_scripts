@@ -5,6 +5,11 @@ from datetime import datetime
 import os
 import os.path
 
+try:
+    import console
+except ImportError:
+    console = None
+
 from geometer import *
 
 if __name__ == '__main__':
@@ -47,3 +52,6 @@ if __name__ == '__main__':
         pass
     finally:
         output = canvas.save()
+    
+    if output and console:
+        console.show_image(output)
