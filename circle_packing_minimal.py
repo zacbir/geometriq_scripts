@@ -2,7 +2,7 @@
 
 import random
 
-from geometriq import *
+from geometer import *
 
 
 class StopPackingException(Exception):
