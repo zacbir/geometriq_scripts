@@ -25,8 +25,8 @@ def show_image(image):
 if __name__ == '__main__':
 
     devices = {
-        'ipad': "2388_1668",
-        'iphone': "2436_1125",
+        'ipad': "1668_2388",
+        'iphone': "1125_2436",
         'macbook': "1440_900",
         'monitor': "3008_1692",
         'square': "4096_4096",
